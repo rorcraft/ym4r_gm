@@ -22,7 +22,7 @@ module Ym4r
 
       #Deprecated. Use the static version instead.
       def header(with_vml = true)
-        GMap.header(:with_vml => with_vml)
+        GMap.header(:with_vml => with_vml).html_safe
       end
 
       #Outputs the header necessary to use the Google Maps API, by including the JS files of the API, as well as a file containing YM4R/GM helper functions. By default, it also outputs a style declaration for VML elements. This default can be overriddent by passing <tt>:with_vml => false</tt> as option to the method. You can also pass a <tt>:host</tt> option in order to select the correct API key for the location where your app is currently running, in case the current environment has multiple possible keys. Usually, in this case, you should pass it <tt>@request.host</tt>. If you have defined only one API key for the current environment, the <tt>:host</tt> option is ignored. Finally you can override all the key settings in the configuration by passing a value to the <tt>:key</tt> key. You can pass a language for the map type buttons with the <tt>:hl</tt> option (possible values are: Japanese (ja), French (fr), German (de), Italian (it), Spanish (es), Catalan (ca), Basque (eu) and Galician (gl): no values means english). Finally, you can pass <tt>:local_search => true</tt> to get the header css and js information needed for the local search control. If you do want local search you must also add <tt>:local_search => true</tt> to the @map.control_init method.
@@ -39,7 +39,7 @@ module Ym4r
         a << "<script src=\"http://www.google.com/uds/api?file=uds.js&amp;v=1.0\" type=\"text/javascript\"></script>" if options[:local_search]
         a << "<script src=\"http://www.google.com/uds/solutions/localsearch/gmlocalsearch.js\" type=\"text/javascript\"></script>\n" if options[:local_search]
         a << "<style type=\"text/css\">@import url(\"http://www.google.com/uds/css/gsearch.css\");@import url(\"http://www.google.com/uds/solutions/localsearch/gmlocalsearch.css\");}</style>" if options[:local_search]
-        a
+        a.html_safe
       end
      
       #Outputs the <div id=...></div> which has been configured to contain the map. You can pass <tt>:width</tt> and <tt>:height</tt> as options to output this in the style attribute of the DIV element (you could also achieve the same effect by putting the dimension info into a CSS or using the instance method GMap#header_width_height). You can aslo pass <tt>:class</tt> to set the classname of the div.
@@ -62,12 +62,12 @@ module Ym4r
         if options.has_key?(:class)
           attributes += options.keys.map {|opt| "#{opt}=\"#{options[opt]}\"" }.join(" ")
         end
-        "<div #{attributes}>#{options[:content].to_s}</div>"
+        "<div #{attributes}>#{options[:content].to_s}</div>".html_safe
       end
 
       #Outputs a style declaration setting the dimensions of the DIV container of the map. This info can also be set manually in a CSS.
       def header_width_height(width,height)
-        "<style type=\"text/css\">\n##{@container} { height: #{height}px;\n  width: #{width}px;\n}\n</style>"
+        "<style type=\"text/css\">\n##{@container} { height: #{height}px;\n  width: #{width}px;\n}\n</style>".html_safe
       end
 
       #Records arbitrary JavaScript code and outputs it during initialization inside the +load+ function.
@@ -288,7 +288,7 @@ module Ym4r
           html << "<style>html, body {width: 100%; height: 100%} body {margin-top: 0px; margin-right: 0px; margin-left: 0px; margin-bottom: 0px} ##{@container} {margin:  0px;} </style>"
         end
         
-        html
+        html.html_safe
       end
       
       #Outputs in JavaScript the creation of a GMap2 object 
